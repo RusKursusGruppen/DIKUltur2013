@@ -1,0 +1,327 @@
+\documentclass[11pt,a4paper,oneside,final,titlepage]{article}
+
+%-- PACKAGE IMPORTS {{{1 --%
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[english]{babel}
+\usepackage[tmargin=1in]{geometry}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{color}
+\usepackage{graphicx}
+\usepackage{lastpage}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{listings}
+\usepackage{verbatim}
+\usepackage{pifont}
+\usepackage{caption}
+\usepackage{mdwlist}
+\usepackage{textcomp}
+\usepackage{wasysym}
+\usepackage{ulem}
+\usepackage{enumerate}
+\usepackage{fixltx2e}
+\usepackage[hidelinks,pdftex]{hyperref}
+
+%-- END PACKAGE IMPORTS }}}1 --%
+
+%-- DEFINITIONS {{{1 --%
+
+%---- Macros ----% {{{2
+\newcommand{\todo}[1]{\color{red}\textbf{TODO}\hspace{0.1in}\textit{#1}\color{black}}
+\newcommand{\remark}[1]{\small\color{yellow}\textbf{Remark}\hspace{0.1in}\textit{#1}\color{black}\normalsize}
+\newtheorem{theorem}{Theorem}
+\newcommand{\reference}[1]{$^{[#1]}$}
+
+\renewcommand{\sectionmark}[1]{\markboth{#1}{}}
+\renewcommand{\subsectionmark}[1]{\markright{#1}}
+%---- End Macros }}}2 ----%
+
+%---- Hyperlinks Setup {{{2 ----%
+
+\hypersetup{
+    % colorlinks     = true
+    %,linkcolor      = cyan
+    ,urlcolor       = cyan
+    ,unicode        = true
+    ,pdfauthor      = {Paw Saabye Pedersen}
+    ,pdfsubject     = {Crash course in git}
+    ,pdftitle       = {On Using GIT}
+    ,pdfkeywords    = {git}{version control}{vcs}{revision control}
+    ,pdfstartview   = {FitW}
+}
+
+%---- End Hyperlinks Setup }}}2 ----%
+
+%---- Syntax Highlighting {{{2 ----%
+
+%------ global syntax style {{{3 ------%
+\lstset{
+     backgroundcolor=\color{white}
+    ,captionpos=b
+    ,extendedchars=true
+    ,tabsize=4
+    ,aboveskip={1.5\baselineskip}
+    ,columns=fixed
+    ,upquote=true
+    ,deletekeywords={}
+    ,escapeinside={\%*}{*)}
+    ,showspaces=false
+    ,showtabs=false
+    ,showstringspaces=false
+    ,title=\lstname
+    ,xleftmargin=\parindent
+    ,basicstyle=\footnotesize
+    ,numberstyle=\tiny\color[rgb]{0.5,0.5,0.5}
+    ,identifierstyle=\ttfamily\color[rgb]{0.49,0.74,0.250}
+    ,keywordstyle=\bfseries\ttfamily\color[rgb]{0,0,1}
+    ,stringstyle=\ttfamily\color[rgb]{0.627,0.126,0.941}
+    ,commentstyle=\textit{\color[rgb]{0,0.6,0}}
+    ,frame=shadowbox
+    ,frameround=ftft
+    ,framerule=0.4pt
+    ,framesep=3pt
+    ,rulesep=2pt
+    ,rulecolor=\color{black}
+    ,rulesepcolor=\color{blue}
+    ,breaklines=true
+    ,resetmargins=false
+    ,prebreak=\raisebox{0ex}[0ex][0ex]{\ensuremath{\hookleftarrow}}
+    ,postbreak={}
+    ,breakautoindent=true
+    ,numbers=left
+    ,stepnumber=5
+    ,numbersep=5pt
+}
+
+
+% end global syntax style }}}3
+
+%------ Language imports {{{3 ------%
+\lstloadlanguages{Bash,sh}
+%------ end language imports }}}3 ------%
+
+\lstdefinestyle{git}{
+    language=sh,
+    stepnumber=1,
+    morekeywords={mkdir,git,init,status,add,commit,--,reset,HEAD,checkout,diff,merge,clone}
+}
+
+%---- End Syntax Highlighting }}}2 ----%
+
+%-- END DEFINITIONS }}}1 --%
+
+%-- DOCUMENT PROPERTIES {{{1 --%
+\pagestyle{fancy}
+
+%---- Title {{{2 ----%
+\title{
+    \LARGE{DIKUltur}\\
+    \huge{Guide to using git}
+    \author{
+        Paw Saabye Pedersen\\
+        \texttt{paw@saabyepedersen.dk}
+    }
+    \date{\today}
+}
+%---- End Title }}}2 ----%
+
+%---- Header and Footer {{{2 ----%
+\rhead{\today \\ \leftmark}
+\lhead{Paw Saabye Pedersen \\ git@dikultur.dk}
+\chead{Guide to Using \textit{git} \\ \bfseries DIKUltur}
+\cfoot{Page \thepage\ of \pageref{LastPage}}
+%---- End Header and Footer }}}2 ----%
+
+%-- END DOCUMENT PROPERTIES }}}1 --%
+
+%-- DOCUMENT {{{1 --%
+\begin{document}
+
+\maketitle
+\thispagestyle{empty}
+
+\clearpage
+\thispagestyle{empty}
+\tableofcontents
+\clearpage
+
+\thispagestyle{fancyplain}
+\setcounter{page}{1}
+
+\section{Introduction}
+Welcome to the wonderful world of git! A world in which you will most likely
+--- and with good reason --- spend an ,,awful'', lot of time during your studies at
+DIKU.
+
+This guide is meant as a crash course in understanding this world, thus, enabling
+\textit{you} to keep track of your files and projects, as well as collaborate
+more efficiently with your fellow students.
+
+\subsection{What is git}
+Git is a \textbf{V}ersion \textbf{C}ontrol \textbf{S}ystem (VCS for short),
+meaning that it --- at least conceptually --- records all your changes to the
+files in a repository (repositories are discussed in section \ref{sec:repos}).\\
+Why is this important, someone might ask (not you obviously), and the main
+answer is that having all your changes stored enables you to revert back to a
+previous version if you mess up your files, and that it enables you to more
+efficiently discover mistakes, since you can see the differences between two
+files of code.
+
+\subsection{Repositories}
+A repository is basically just a regular folder on your computer, which has a
+VCS monitoring it. You will typically have an entire project in a repository,
+rather than just single files scattered across multiple repositories. This will
+--- most likely --- come natural as this is the normal structure of folders
+containing code projects.
+To turn a folder into a git repository, simply change directory to the given
+project folder and initialise git, like so:
+
+\begin{lstlisting}[name=lst:initialiseRepo,caption=Start monitoring a folder,
+                   label=lst:initialiseRepo,style=git]
+# Create a directory to demonstrate init.
+ $  mkdir %*$\sim$*)/myGitProject
+# Change directory to the one you just created
+ $  cd %*$\sim$*)/myGitProject
+# ... and initialise the git repo
+ $  git init
+\end{lstlisting}
+
+You can always see the current repository status with either of the two following
+commands:
+\begin{lstlisting}[name=lst:status,caption=Check current repo's status,
+                   label=lst:status,style=git]
+# Check status along with descriptive text
+ $  git status
+# Or get only the status of the files
+ $  git status -s
+\end{lstlisting}
+
+Files that you put in this new repository will not automagically be under
+version control. You must explicitly tell git which files you wish for it to
+monitor. This allows you to not share for instance compiled binary files
+(which you will learn about in your programming courses, if you haven't already)
+with other collaborators.\\
+To tell git to monitor a file you ,,add it to the staging area'' (which will
+hopefully become clear to you shortly). This can be done as follows:
+\begin{lstlisting}[name=lst:addFiles,caption=Adding files to staging area,
+                   label=lst:addFiles,style=git]
+# Create a file to add
+ $ echo "Some gibberish text" > foogittish.bar
+# Add the file
+ $ git add foogittish.bar
+# Alternatively you can add all files in the folder
+ $ git add %*\textbf{.}*)    # notice the dot!
+\end{lstlisting}
+
+\subsubsection{Staging area}
+Even though we have now added our \lstinline[language=sh]{foogittish.bar} file
+to the staging area, the changes we have made to it aren't stored in git.
+The staging area is meant to be a place where you temporarily hold the files you
+wish to publish. This allows you to publish (commit) several files under one.
+
+Imagine, for instance, that you are working on your coursework for Object-Oriented
+Programming and Design with your group, and that you have succesfully made a
+class that inherits from another, yet to be written, class.\\
+You wouldn't want to publish the inheriting class without its dependencies being
+fulfilled, rather, you would want to publish the two --- along with any other
+dependencies/deriative files --- together. The point, then, is that by grouping
+together related files in what's called a \lstinline[style=git]{commit} you
+can easily navigate your commit history, and know exactly which files had an
+update when.
+
+\subsubsection[label=sec:repos]{Commits}
+\todo{Write this bit}
+The aforementioned changes are stacked together in what's called a commits.
+
+\subsubsection{Repositories}
+\label{sec:repos}Repositories are basically just folders, which have a VCS
+monitoring it.\\
+
+
+\subsection{Version Control Systems (VCS)}
+\remark{This section might be better off in its own file.} \\
+\todo{This section needs to be written}\\
+\remark{Short text to introduce that there will be a list of the most frequent
+        vcs'. Perhaps also why Dropbox is \textbf{not} on the list!} \\
+
+\subsubsection{Git}
+\texttt{Pros and cons} \\
+There are --- as always --- both pros of cons of git.
+
+\subsubsection{SVN - Subversion}
+
+\subsubsection{Mercurial}
+
+\subsubsection{Others}
+\remark{Explain that there are a lot of other systems out there, but that some
+        of them are language specific (Perl's CTAN, Python's pip, Haskell's
+        cabal} \\
+
+\section{Collaborating}
+When working on a project in a group you often find yourself needing to work on
+the same codebase. Some people choose to make their own lives miserable and use
+Dropbox, which, in my experience, has led to nothing good. You'll have multiple
+working copies of a given file in folder, and you might even end up overwriting
+several hours' work because someone saves an old copy of the same name. This is
+where git \emph{really} comes into its right.
+
+Normally when collaborating using git, you'll set up a remote repository on a
+service like \mbox{\href{http://github.com}{github}},
+\mbox{\href{http://bitbucket.com}{bitbucket}} or
+\mbox{\href{http://assembla.com}{assembla}}, and you would do yourself a favor
+creating a user there \textit{now}.
+
+The author doesn't favour any of these services, but github is the most commonly
+used service at DIKU. Creating a user there is fairly straight-forward and you
+can use your mail address provided by KU to create a free user that let you
+create up to 5 'private' repositories and an unlimited amount of 'public' ones.
+
+\todo{Refrase following:} Once a new remote repository has been created it will have a link to it, which
+utilises either the http(s) or the git protocol.
+
+Once you've setup a remote repository you can make a local copy of its structure,
+using the following command:
+\begin{lstlisting}[label=lst:cloning,caption=How to clone a repository,
+                   name=lst:cloning,style=git]
+# Clone the remote repository into specified folder
+ $  git clone "https://github.com/pspeder/dikultur-git.git" ./GittY
+# You can also omit the folder name
+ $  git clone "git@git://www.assembla.com/pspeder:dikultur-git.git"
+# Which will name the repository the same as on the remote server
+\end{lstlisting}
+The above listing will setup all the necessary stuff needed to retrieve
+(pull/fetch) and upload (push) your work to the server\footnote{We will discuss
+how to push and pull a little later}. I shan't go into detail on how to set this
+manually up here, but you may read about it in \href{http://scm-git.com/book/}
+{git's own book}.
+
+You can check that your local copy is pointing to the right location with the
+command: \lstinline[style=git]{git remote -v}, which should produce two entries
+both pointing to your remote server.
+
+\section{Workflows}
+\begin{lstlisting}[language=bash
+                  ,label=lst:generalFlow
+                  ,name=lst:generalFlow
+                  ,caption=General workflow when working with git]
+# Check which changes you made to your repository
+$   git status
+# If they're right add them to the staging area
+# This can be done in one of two ways:
+ # 1)
+$   git add <the files you would like to add goes here>
+ # 2)
+$   git add .  # Add all changed files
+$              # Note the dot.
+Check that you added the correct files
+$   git status
+# If correct commit your staged files
+$   git commit -m "<A message to go along with the commit>"
+# If not remove the files from staging area with:
+$   git checkout -- <files to be removed from staging area>
+\end{lstlisting}
+\end{document}
+%-- END DOCUMENT }}}1 --%
+
