@@ -313,14 +313,24 @@ $   git status
  # 1)
 $   git add <the files you would like to add goes here>
  # 2)
-$   git add .  # Add all changed files
+$   git add .  # Add all files in current and sub-directories
 $              # Note the dot.
-Check that you added the correct files
+# Check that you added the correct files
 $   git status
 # If correct commit your staged files
-$   git commit -m "<A message to go along with the commit>"
+ # The '-a' flag tells git to auto-add the files that are already tracked by git
+$   git commit -am "<A message to go along with the commit>"
 # If not remove the files from staging area with:
 $   git checkout -- <files to be removed from staging area>
+# Download the latest version to your local machine as to prevent merge-conflicts
+#  on the master branch
+$ git pull origin
+# If there are merge conflicts you resolve them firstly
+$ vim <file resulting in merge-conflict>
+ # and then commit again
+$ git commit -am "<message>"
+# Lastly upload to remote
+git push origin
 \end{lstlisting}
 \end{document}
 %-- END DOCUMENT }}}1 --%
